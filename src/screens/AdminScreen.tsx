@@ -1,7 +1,7 @@
 import { Fragment, useMemo, useState } from 'react'
 import { CUSTOMERS, EMAIL_TYPES, FLAVOURS, HOURS_DATA, REV_DATA, UNITS_DATA } from '../data/mock'
 import { boxTypeLabel } from '../lib/pricing'
-import { setUseMock, supabaseConfigured } from '../lib/supabase'
+import { setUseMock, supabase, supabaseConfigured } from '../lib/supabase'
 import type { Flavour, Order, OrderStatus, StockMap } from '../types'
 
 type AdminTab = 'dashboard' | 'liveops' | 'orders' | 'customers' | 'menu' | 'emails' | 'settings'
@@ -143,9 +143,19 @@ export default function AdminScreen({
         </nav>
         <div className="admin-sidebar-foot">
           <div className="live-badge">
-            <span className="live-dot" /> Live · Supabase
+            <span className="live-dot" /> {useMock ? 'Mock data' : 'Live · Supabase'}
           </div>
-          <button className="admin-signout">Sign out</button>
+          {!useMock && (
+            <button
+              type="button"
+              className="admin-signout"
+              onClick={() => {
+                void supabase?.auth.signOut()
+              }}
+            >
+              Sign out
+            </button>
+          )}
         </div>
       </aside>
 
