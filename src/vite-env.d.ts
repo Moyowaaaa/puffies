@@ -3,8 +3,6 @@
 interface ImportMetaEnv {
   readonly VITE_SUPABASE_URL?: string
   readonly VITE_SUPABASE_ANON_KEY?: string
-  /** Set to 'true' to force the in-memory wireframe data even with Supabase configured. */
-  readonly VITE_USE_MOCK?: string
 }
 
 interface ImportMeta {

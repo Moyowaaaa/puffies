@@ -1,6 +1,7 @@
 import { Fragment, useMemo, useState } from 'react'
 import { CUSTOMERS, EMAIL_TYPES, FLAVOURS, HOURS_DATA, REV_DATA, UNITS_DATA } from '../data/mock'
 import { boxTypeLabel } from '../lib/pricing'
+import { setUseMock, supabaseConfigured } from '../lib/supabase'
 import type { Flavour, Order, OrderStatus, StockMap } from '../types'
 
 type AdminTab = 'dashboard' | 'liveops' | 'orders' | 'customers' | 'menu' | 'emails' | 'settings'
@@ -76,12 +77,21 @@ interface Props {
   orders: Order[]
   stock: StockMap
   noNav: boolean
+  useMock: boolean
   onSetStatus: (id: number, status: OrderStatus) => void
   onStockChange: (id: string, qty: number) => void
   onToggleOut: (id: string) => void
 }
 
-export default function AdminScreen({ orders, stock, noNav, onSetStatus, onStockChange, onToggleOut }: Props) {
+export default function AdminScreen({
+  orders,
+  stock,
+  noNav,
+  useMock,
+  onSetStatus,
+  onStockChange,
+  onToggleOut,
+}: Props) {
   const [tab, setTab] = useState<AdminTab>('dashboard')
   const [revRange, setRevRange] = useState<'7d' | '30d' | 'all'>('7d')
   const [hoursRange, setHoursRange] = useState<'today' | '7d' | '30d' | 'all'>('today')
@@ -474,6 +484,48 @@ export default function AdminScreen({ orders, stock, noNav, onSetStatus, onStock
                 <div className="panel-title">Settings</div>
               </div>
               <div style={{ display: 'grid', gap: 14, maxWidth: 420 }}>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: 16,
+                    padding: '12px 14px',
+                    background: 'var(--cream-2, #efe9db)',
+                    borderRadius: 12,
+                  }}
+                >
+                  <div>
+                    <div className="field-label" style={{ marginBottom: 4 }}>
+                      Use mock data
+                    </div>
+                    <div style={{ fontSize: 12, color: '#7a7468', lineHeight: 1.4 }}>
+                      {supabaseConfigured
+                        ? useMock
+                          ? 'Wireframe data only — Supabase is paused in this browser.'
+                          : 'Live Supabase data — turn on to demo without writing to the DB.'
+                        : 'Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to enable live mode.'}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className={useMock ? 'btn-blue' : 'btn-ghost'}
+                    disabled={!supabaseConfigured}
+                    aria-pressed={useMock}
+                    onClick={() => {
+                      setUseMock(!useMock)
+                      window.location.reload()
+                    }}
+                    style={{
+                      flexShrink: 0,
+                      minWidth: 72,
+                      opacity: supabaseConfigured ? 1 : 0.5,
+                      cursor: supabaseConfigured ? 'pointer' : 'not-allowed',
+                    }}
+                  >
+                    {useMock ? 'On' : 'Off'}
+                  </button>
+                </div>
                 <div>
                   <label className="field-label">Kiosk unpaid order expiry</label>
                   <select className="field-sm" defaultValue="10 minutes">

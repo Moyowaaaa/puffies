@@ -7,7 +7,7 @@ import AdminScreen from './screens/AdminScreen'
 import StaffLogin from './screens/StaffLogin'
 import type { Session } from '@supabase/supabase-js'
 import { INITIAL_ORDERS, INITIAL_STOCK } from './data/mock'
-import { backendEnabled, supabase } from './lib/supabase'
+import { isBackendEnabled, supabase } from './lib/supabase'
 import {
   fetchOrders,
   fetchStock,
@@ -46,6 +46,7 @@ export default function App() {
   const pinnedApp = useMemo(() => readApp(), [])
   const app = useMemo<AppId>(() => pinnedApp ?? 'till', [pinnedApp])
   const pinned = app === 'admin'
+  const backendEnabled = useMemo(() => isBackendEnabled(), [])
   const [orders, setOrders] = useState<Order[]>(INITIAL_ORDERS)
   const [stock, setStock] = useState<StockMap>(INITIAL_STOCK)
   const [session, setSession] = useState<Session | null>(null)
@@ -202,6 +203,7 @@ export default function App() {
           orders={orders}
           stock={stock}
           noNav={noNav}
+          useMock={!backendEnabled}
           onSetStatus={setStatus}
           onStockChange={changeStock}
           onToggleOut={toggleOut}

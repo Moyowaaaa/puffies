@@ -26,12 +26,11 @@ Fill in from **Project Settings → API**:
 ```
 VITE_SUPABASE_URL=https://YOUR-PROJECT.supabase.co
 VITE_SUPABASE_ANON_KEY=YOUR-PUBLISHABLE-OR-ANON-KEY
-VITE_USE_MOCK=false
 ```
 
 The anon key is public by design; RLS is what protects order/customer data. Never put the service role key or `STRIPE_SECRET_KEY` in a `VITE_` variable. `.env.local` is gitignored.
 
-Restart `pnpm dev`. The nav shows **● LIVE** when Supabase is active, **● MOCK** otherwise.
+Restart `pnpm dev`. The nav shows **● LIVE** when Supabase is active, **● MOCK** otherwise. Flip mock/live anytime in **Admin → Settings** (stored in the browser — no env change needed).
 
 ## 4. Verify
 
